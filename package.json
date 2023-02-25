@@ -1,0 +1,23 @@
+{
+  "name": "workers-sdk",
+  "version": "1.0.0",
+  "description": "Full-stack Typesafety with Cloudflare Workers 👷",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mojavad/workers-sdk.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mojavad/workers-sdk/issues"
+  },
+  "homepage": "https://github.com/mojavad/workers-sdk#readme",
+  "devDependencies": {
+    "es-module-lexer": "^1.2.0",
+    "glob": "^8.1.0"
+  }
+}
