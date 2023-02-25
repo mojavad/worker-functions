@@ -1,26 +1,30 @@
 import { glob } from "./promise-glob";
-import { readFile } from "fs/promises";
-import { init, parse } from "es-module-lexer";
-
-(async () => {
-  await init;
-
+import ts from "typescript";
+export const parseWorkers = async () => {
   const workerFiles = await glob();
 
-  const functions = (
-    await Promise.all(
-      workerFiles.map(async (file) => {
-        const source = await readFile(file, { encoding: "utf-8" });
-        const [_, exports] = parse(source);
-
-        return exports.map((exp) => exp.n);
-      })
-    )
-  ).flat();
+  const program = ts.createProgram(workerFiles, {});
+  const checker = program.getTypeChecker();
+  const exports = workerFiles
+    .map((filename) => {
+      const sourceFile = program.getSourceFile(filename);
+      if (!sourceFile) return [];
+      const exportSymbol = checker.getSymbolAtLocation(
+        sourceFile?.getChildAt(0)
+      );
+      // @ts-ignore
+      const exps = checker.getExportsAndPropertiesOfModule(
+        // @ts-ignore
+        exportSymbol || sourceFile.symbol
+      );
+      return exps;
+    })
+    .flat()
+    .map((obj) => obj.escapedName as string);
 
   // check if there are duplicate function names.
   const duplicateSet = new Set();
-  functions.forEach((fn) => {
+  exports.forEach((fn) => {
     if (duplicateSet.has(fn)) {
       console.error(
         "\x1b[31m",
@@ -36,4 +40,6 @@ import { init, parse } from "es-module-lexer";
       duplicateSet.add(fn);
     }
   });
-})();
+
+  return exports;
+};
