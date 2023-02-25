@@ -4,7 +4,9 @@
   "description": "Full-stack Typesafety with Cloudflare Workers 👷",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "parse-types": "esbuild --target=es2020 --bundle ./src/parse-types.ts --platform=node --format=cjs --outfile=./dist/parse-types.js && node ./dist/parse-types.js",
+    "parse-workers": "esbuild --target=es2020 --bundle ./src/parse-workers.ts --platform=node --format=cjs --outfile=./dist/parse-workers.js && node ./dist/parse-workers.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,9 @@
   },
   "homepage": "https://github.com/mojavad/workers-sdk#readme",
   "devDependencies": {
+    "@types/node": "^18.14.1",
     "es-module-lexer": "^1.2.0",
+    "esbuild": "^0.17.10",
     "glob": "^8.1.0"
   }
 }
