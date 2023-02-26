@@ -7,8 +7,6 @@ An opinionated SDK to get up and running with Cloudflare Workers:
 - Just write **Simple Functions**, without requiring any manual calling and configuring of `fetch` requests. 🏃
 - Virtually **no boilerplate** - simply instantiate a client and get started. 🚀
 
----
-
 ## Setup
 
 Using your preferred package manager, install the `worker-functions` package. For example: 
