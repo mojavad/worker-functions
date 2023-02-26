@@ -9,7 +9,7 @@ An opinionated SDK to get up and running with Cloudflare Workers:
 
 ## Setup
 
-Using your preferred package manager, install the `worker-functions` package. For example: 
+Using your preferred package manager, install the `worker-functions` package, and `wrangler`, Cloudflare's command line tool for Workers. For example: 
 
 ```
 yarn add worker-functions 
@@ -24,8 +24,4 @@ npx worker-functions
 
 This will generate a `wrangler.json` configuration file in your project root directory. 
 
-Lastly, add the following script to your `package.json`: 
-
-```
-"dev:worker": "npx wrangler --experimental-json-config dev --experimental-local"
-```
+And you're done!
