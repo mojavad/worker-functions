@@ -10,8 +10,8 @@ export default {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Method": "POST",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
+          "Access-Control-Allow-Headers": "Content-Type"
+        }
       });
     }
     if (request.method !== "POST") {
@@ -20,8 +20,8 @@ export default {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Method": "POST",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
+          "Access-Control-Allow-Headers": "Content-Type"
+        }
       });
     }
     const url = new URL(request.url);
@@ -30,11 +30,11 @@ export default {
     try {
       input = (await request.json()) as unknown[];
     } catch {}
-    return Response.json(functions[functionName].bind(env)(...input), {
+    return Response.json(await functions[functionName].bind(env)(...input), {
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Method": "POST",
-      },
+        "Access-Control-Allow-Method": "POST"
+      }
     });
-  },
+  }
 };
