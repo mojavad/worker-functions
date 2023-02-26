@@ -4,7 +4,6 @@
   "description": "Full-stack Typesafety with Cloudflare Workers 👷",
   "main": "generated-client/index.ts",
   "scripts": {
-    "postinstall": "node ./dist/generate-client.js",
     "build": "esbuild --target=es2020 --external:worker-functions --bundle ./src/generate-client.ts --platform=node --format=cjs --outfile=./dist/generate-client.js "
   },
   "bin": {
