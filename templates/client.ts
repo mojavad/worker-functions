@@ -1,4 +1,6 @@
-import type { WorkerTypeFns } from './type-gen';
+import type { WorkerTypeFns } from "./type-gen";
+import { fetch } from "cross-fetch";
+
 const ourFetch = async (
   endpoint: string,
   functionName: string,
@@ -6,10 +8,10 @@ const ourFetch = async (
 ) => {
   const resp = await fetch(`${endpoint}/${encodeURIComponent(functionName)}`, {
     body: JSON.stringify(params),
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
-    }
+      "Content-Type": "application/json",
+    },
   });
 
   if (resp.ok) return resp.json();
@@ -22,7 +24,7 @@ export function WorkerClient(endpoint: string) {
       get: (_, fn) => {
         // @ts-ignore
         return (...params) => ourFetch(endpoint, fn, ...params);
-      }
+      },
     }
   ) as WorkerTypeFns;
 }
