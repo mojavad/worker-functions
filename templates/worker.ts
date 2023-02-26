@@ -30,7 +30,7 @@ export default {
     try {
       input = (await request.json()) as unknown[];
     } catch {}
-    return Response.json(functions[functionName](...input), {
+    return Response.json(functions[functionName].bind(env)(...input), {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Method": "POST",
