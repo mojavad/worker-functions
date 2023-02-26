@@ -27,7 +27,6 @@ export default {
     const url = new URL(request.url);
     const functionName = decodeURIComponent(url.pathname.split('/')[1]);
     let input: any[] = [];
-    console.log(functions[functionName], functionName);
     try {
       input = (await request.json()) as unknown[];
     } catch {}
