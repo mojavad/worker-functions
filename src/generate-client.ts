@@ -1,43 +1,57 @@
-import { parseWorkers } from "./parse-workers";
-import { generateTypes } from "./parse-types";
-import { writeFile, mkdir } from "fs/promises";
-(async () => {
-  await generateTypes();
-  const workers = await parseWorkers();
-  await mkdir(`./dist/workers-sdk`, { recursive: true });
-
+#!/usr/bin/env node
+import { parseWorkers } from './parse-workers';
+import { generateTypes } from './parse-types';
+import { writeFile, mkdir, readFile } from 'fs/promises';
+async function main() {
+  // Check for duplicate function names
+  await parseWorkers();
+  const [types, imports, workers] = await generateTypes();
+  await mkdir(`./node_modules/worker-functions/generated-client`, {
+    recursive: true
+  });
   await writeFile(
-    `./dist/workers-sdk/index.ts`,
-    `
-import type { WorkerTypeFns } from "./type-gen"
-const ourFetch = async (
-  endpoint: string,
-  functionName: string,
-  ...params: any
-) => {
-  const resp = await fetch(\`\${endpoint}/\${encodeURIComponent(functionName)}\`, {
-    body: JSON.stringify(params),
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    `./node_modules/worker-functions/generated-client/index.ts`,
+    await readFile(`./node_modules/worker-functions/templates/client.ts`)
+  );
+  await writeFile(
+    `./node_modules/worker-functions/generated-client/type-gen.ts`,
+    types
+  );
+
+  const functions = `
+const functions = Object.fromEntries([
+  ${workers.map(([path, id]) => `...Object.entries(Worker${id})`).join(',\n')}
+]);
+  `;
+  await mkdir(`./node_modules/worker-functions/generated-worker`, {
+    recursive: true
   });
 
-  if (resp.ok) return resp.json() ;
-};
-
-export function WorkerClient(endpoint: string) {
-  return new Proxy(
-    {},
-    {
-      get: (_, fn) => {
-        // @ts-ignore
-        return (...params) => ourFetch(endpoint, fn, ...params);
-      },
-    }
-  ) as WorkerTypeFns;
-}
-      
-`
+  await writeFile(
+    `./node_modules/worker-functions/generated-worker/index.ts`,
+    imports +
+      functions +
+      (await readFile(`./node_modules/worker-functions/templates/worker.ts`))
   );
-})();
+
+  try {
+    await readFile('./wrangler.json');
+  } catch {
+    await writeFile(
+      './wrangler.json',
+      JSON.stringify(
+        {
+          name: 'my-worker',
+          compatibility_date: '2023-02-26',
+          main: 'node_modules/worker-functions/generated-worker/index.ts',
+          build: {
+            command: 'npx worker-functions'
+          }
+        },
+        null,
+        2
+      )
+    );
+  }
+}
+main();

@@ -1,25 +1,35 @@
 {
-  "name": "workers-sdk",
-  "version": "1.0.0",
+  "name": "worker-functions",
+  "version": "0.1.0",
   "description": "Full-stack Typesafety with Cloudflare Workers 👷",
-  "main": "index.js",
+  "main": "generated-client/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "parse-types": "esbuild --target=es2020 --bundle ./src/parse-types.ts --platform=node --format=cjs --outfile=./dist/parse-types.js && node ./dist/parse-types.js",
-    "parse-workers": "esbuild --target=es2020 --bundle ./src/parse-workers.ts --platform=node --format=cjs --outfile=./dist/parse-workers.js && node ./dist/parse-workers.js",
-    "generate-client": "esbuild --target=es2020 --bundle ./src/generate-client.ts --platform=node --format=cjs --outfile=./dist/generate-client.js && node ./dist/generate-client.js"
+    "postinstall": "node ./dist/generate-client.js",
+    "build": "esbuild --target=es2020 --external:worker-functions --bundle ./src/generate-client.ts --platform=node --format=cjs --outfile=./dist/generate-client.js "
   },
+  "bin": {
+    "worker-functions": "./dist/generate-client.js"
+  },
+  "files": [
+    "templates",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "LICENSE",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mojavad/workers-sdk.git"
+    "url": "git+https://github.com/mojavad/worker-functions.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mojavad/workers-sdk/issues"
+    "url": "https://github.com/mojavad/worker-functions/issues"
   },
-  "homepage": "https://github.com/mojavad/workers-sdk#readme",
+  "homepage": "https://github.com/mojavad/worker-functions#readme",
   "devDependencies": {
+    "@types/glob": "^8.1.0",
     "@types/node": "^18.14.1",
     "esbuild": "^0.17.10",
     "glob": "^8.1.0",

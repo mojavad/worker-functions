@@ -1,11 +1,11 @@
-import { glob } from "./promise-glob";
-import ts from "typescript";
-export const parseWorkers = async () => {
+import { glob } from './promise-glob';
+import ts from 'typescript';
+export async function parseWorkers() {
   const workerFiles = await glob();
 
   const program = ts.createProgram(workerFiles, {});
   const checker = program.getTypeChecker();
-  const exports = workerFiles
+  const exps = workerFiles
     .map((filename) => {
       const sourceFile = program.getSourceFile(filename);
       if (!sourceFile) return [];
@@ -24,14 +24,14 @@ export const parseWorkers = async () => {
 
   // check if there are duplicate function names.
   const duplicateSet = new Set();
-  exports.forEach((fn) => {
+  exps.forEach((fn) => {
     if (duplicateSet.has(fn)) {
       console.error(
-        "\x1b[31m",
-        "Worker found with duplicate function name. All named function exports should have unique names."
+        '\x1b[31m',
+        'Worker found with duplicate function name. All named function exports should have unique names.'
       );
       console.error(
-        "\x1b[31m",
+        '\x1b[31m',
         `Rename one instance of function named "${fn}."`
       );
 
@@ -41,5 +41,5 @@ export const parseWorkers = async () => {
     }
   });
 
-  return exports;
-};
+  return exps;
+}

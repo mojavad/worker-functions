@@ -1,32 +1,30 @@
-import { glob } from "./promise-glob";
-import crypto from "crypto";
-import { mkdir, writeFile } from "fs/promises";
+import { glob } from './promise-glob';
+import crypto from 'crypto';
+import { readFile } from 'fs/promises';
 
-export async function generateTypes() {
+export async function generateTypes(): Promise<[string, string, string[][]]> {
   const workers = (await glob()).map((w) => [
     w,
-    crypto.randomBytes(20).toString("hex"),
+    crypto.randomBytes(20).toString('hex')
   ]);
-  await mkdir(`./dist/workers-sdk`, { recursive: true });
-  await writeFile(
-    `./dist/workers-sdk/type-gen.ts`,
-    `
-${workers
-  .map(
-    ([path, id]) =>
-      `import * as Worker${id} from "../../${path.split(".ts")[0]}"`
-  )
-  .join(";\n")}
+  const imports = workers
+    .map(
+      ([path, id]) =>
+        `import * as Worker${id} from "../../../${path.split('.ts')[0]}"`
+    )
+    .join(';\n');
 
-type WorkerType = ${workers
-      .map(([path, id]) => `typeof Worker${id}`)
-      .join(" & ")};
+  return [
+    `${imports}
+type WorkerType = ${
+      workers.length
+        ? workers.map(([path, id]) => `typeof Worker${id}`).join(' & ')
+        : `never`
+    };
 
-type WorkerTypeFns = {
-  [Fn in keyof WorkerType]: (
-    ...p: Parameters<WorkerType[Fn]>
-  ) => Promise<Awaited<ReturnType<WorkerType[Fn]>>>;
-};
-export type { WorkerTypeFns };`
-  );
+${await readFile(`./node_modules/worker-functions/templates/types.ts`)}
+`,
+    imports,
+    workers
+  ];
 }
