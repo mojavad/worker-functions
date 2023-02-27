@@ -1,6 +1,6 @@
 {
   "name": "worker-functions",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Full-stack Typesafety with Cloudflare Workers 👷",
   "main": "generated-client/index.ts",
   "scripts": {

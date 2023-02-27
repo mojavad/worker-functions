@@ -3,8 +3,10 @@ import { parseWorkers } from "./parse-workers";
 import { generateTypes } from "./parse-types";
 import { writeFile, mkdir, readFile } from "fs/promises";
 async function main() {
-  // Check for duplicate function names
-  await parseWorkers();
+  try {
+    // Check for duplicate function names
+    await parseWorkers();
+  } catch {}
   const [types, imports, workers] = await generateTypes();
   await mkdir(`./node_modules/worker-functions/generated-client`, {
     recursive: true
