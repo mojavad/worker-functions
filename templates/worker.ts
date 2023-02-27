@@ -12,7 +12,8 @@ export default {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Method": "POST",
-          "Access-Control-Allow-Headers": "Content-Type"
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Expose-Headers": "X-Worker-Functions-Error"
         }
       });
     }
@@ -52,7 +53,8 @@ export default {
           }),
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Method": "POST"
+          "Access-Control-Allow-Method": "POST",
+          "Access-Control-Expose-Headers": "X-Worker-Functions-Error"
         }
       }
     );

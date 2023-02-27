@@ -1,5 +1,5 @@
-import { glob } from './promise-glob';
-import ts from 'typescript';
+import { glob } from "./promise-glob";
+import ts from "typescript";
 export async function parseWorkers() {
   const workerFiles = await glob();
 
@@ -27,11 +27,11 @@ export async function parseWorkers() {
   exps.forEach((fn) => {
     if (duplicateSet.has(fn)) {
       console.error(
-        '\x1b[31m',
-        'Worker found with duplicate function name. All named function exports should have unique names.'
+        "\x1b[31m",
+        "Worker found with duplicate function name. All named function exports should have unique names."
       );
       console.error(
-        '\x1b[31m',
+        "\x1b[31m",
         `Rename one instance of function named "${fn}."`
       );
 

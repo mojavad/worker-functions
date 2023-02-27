@@ -21,16 +21,19 @@ const ourFetch = async (
   );
 
   if (resp.ok) {
-    const errorHeader = devalue.parse(
-      resp.headers.get("X-Worker-Functions-Error"),
-      {
-        Error: (m) => new Error(m)
+    if (resp.headers.has("X-Worker-Functions-Error")) {
+      const errorHeader = devalue.parse(
+        resp.headers.get("X-Worker-Functions-Error"),
+        {
+          Error: (m) => new Error(m)
+        }
+      );
+      if (errorHeader) {
+        throw errorHeader;
       }
-    );
-    if (errorHeader !== null) {
-      throw errorHeader;
     }
-    return devalue.parse(await resp.text(), {
+    const data = await resp.text();
+    return devalue.parse(data, {
       Error: (m) => new Error(m)
     });
   }

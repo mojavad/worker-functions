@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import { parseWorkers } from './parse-workers';
-import { generateTypes } from './parse-types';
-import { writeFile, mkdir, readFile } from 'fs/promises';
+import { parseWorkers } from "./parse-workers";
+import { generateTypes } from "./parse-types";
+import { writeFile, mkdir, readFile } from "fs/promises";
 async function main() {
   // Check for duplicate function names
   await parseWorkers();
@@ -20,7 +20,7 @@ async function main() {
 
   const functions = `
 const functions = Object.fromEntries([
-  ${workers.map(([path, id]) => `...Object.entries(Worker${id})`).join(',\n')}
+  ${workers.map(([path, id]) => `...Object.entries(Worker${id})`).join(",\n")}
 ]);
   `;
   await mkdir(`./node_modules/worker-functions/generated-worker`, {
@@ -35,17 +35,17 @@ const functions = Object.fromEntries([
   );
 
   try {
-    await readFile('./wrangler.json');
+    await readFile("./wrangler.json");
   } catch {
     await writeFile(
-      './wrangler.json',
+      "./wrangler.json",
       JSON.stringify(
         {
-          name: 'my-worker',
-          compatibility_date: '2023-02-26',
-          main: 'node_modules/worker-functions/generated-worker/index.ts',
+          name: "my-worker",
+          compatibility_date: "2023-02-26",
+          main: "node_modules/worker-functions/generated-worker/index.ts",
           build: {
-            command: 'npx worker-functions'
+            command: "npx worker-functions"
           }
         },
         null,
